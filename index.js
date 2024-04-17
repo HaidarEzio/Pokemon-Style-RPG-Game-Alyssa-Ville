@@ -26,7 +26,7 @@ class Sprite {
     }
 
     draw() {
-        c.drawImage(image, -690, -380)
+        c.drawImage(this.image, this.position.x, this.position.y)
     }
 }
 
@@ -76,32 +76,70 @@ function animate() {
         playerImage.width/4,
         playerImage.height
     ) 
-    if () {
 
+    if (keys.w.pressed && lastKey === 'w'){
+        background.position.y += 3
+    }
+    else if (keys.a.pressed && lastKey === 'a') {
+        background.position.x += 3
+    }
+    else if (keys.s.pressed && lastKey === 's') {
+        background.position.y -= 3
+    }
+    else if (keys.d.pressed && lastKey === 'd') {
+        background.position.x -= 3
     }
 }
 window.requestAnimationFrame(animate);
+
+
 // listen for when player presses key and execute function
+let lastKey = '';
 window.addEventListener('keydown', (e) => {
     // console.log("keydown works", e.key)
     switch (e.key) {
         case 'w':
             keys.w.pressed = true
+            lastKey = 'w'
             console.log("pressed w key")
             break
         case 'a':
             keys.a.pressed = true
+            lastKey = 'a'
             console.log("pressed a key")
             break
         case 's':
             keys.s.pressed = true
+            lastKey = 's'
             console.log("pressed s key")
             break
         case 'd':
             keys.d.pressed = true
+            lastKey = 'd'
             console.log("pressed d key")
             break
     }
+    console.log(keys)
+})
+
+// create event listener for releasing keys
+window.addEventListener('keyup', (e) => {
+    // console.log("keydown works", e.key)
+    switch (e.key) {
+        case 'w':
+            keys.w.pressed = false
+            break
+        case 'a':
+            keys.a.pressed = false
+            break
+        case 's':
+            keys.s.pressed = false
+            break
+        case 'd':
+            keys.d.pressed = false
+            break
+    }
+    console.log(keys)
 })
 
 

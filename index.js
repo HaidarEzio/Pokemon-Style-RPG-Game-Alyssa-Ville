@@ -26,18 +26,17 @@ playerImage.src = "/playerDown.png"
 // create variable to hold collisions data
 const collisionsMap = []
 for (let i = 0; i < collisions.length; i += 62) {
-    collisionsMap.push(collisions.slice(i, 62+i))
-    collisions.slice(0, 62)
+    collisionsMap.push(collisions.slice(i, 62 + i))
     console.log(collisionsMap)
 }
 
 class Boundary {
-    static width = 48;
-    static height = 48;
-    constructor(position) {
-        this.position = position;
-        this.width = 48;
-        this.height = 48;
+    static width = 48
+    static height = 48
+    constructor({ position }) {
+        this.position = position
+        this.width = 48
+        this.height = 48
     }
      draw() {
         c.fillStyle = 'red'
@@ -46,24 +45,30 @@ class Boundary {
      }
 }
 
+// declare boundaries array
 const boundaries = []
+// give offset a variable since used multiple times
 const offset = {
     x: -690,
     y: -380
 }
+
 collisionsMap.forEach((row, i) => {
     row.forEach((symbol, n) => {
-        if (symbol == 1089){
-        boundaries.push(new Boundary({
-            position: {
-            x: n * Boundary.width + offset.x,
-            y: i * Boundary.height + offset.y
-            }
-        }))}
+        if (symbol === 1089){
+            boundaries.push(
+                new Boundary({
+                    position: {
+                        x: n * Boundary.width + offset.x,
+                        y: i * Boundary.height + offset.y
+                }
+            })
+        )}
     })
 })
 
 console.log(boundaries)
+
 class Sprite {
     constructor({position, image, velocity}) {
         this.position = position;
@@ -99,6 +104,18 @@ const keys = {
         pressed: false
     }
 }
+
+// test
+const testBoundary = new Boundary({
+    position: {
+        x: 400,
+        y: 400
+    }
+})
+
+// moveables
+const moveables = [background, testBoundary]
+
 // animation infinite loop
 function animate() {
 
@@ -107,9 +124,9 @@ function animate() {
     // load map before player so that player is on top of map
     background.draw(image)
     // draw boundaries on top of background, but before player
-    boundaries.forEach(boundary => {
-        boundary.draw()
-    })
+    // boundaries.forEach(boundary => {
+    //     boundary.draw()
+    // })
     c.drawImage(
         playerImage, 
         // cropping arguments (x, y, crop width, crop height)
@@ -127,16 +144,24 @@ function animate() {
     ) 
 
     if (keys.w.pressed && lastKey === 'w'){
-        background.position.y += 3
+        moveables.forEach((moveable) => {
+            moveable.position.y +=3
+        })
     }
     else if (keys.a.pressed && lastKey === 'a') {
-        background.position.x += 3
+        moveables.forEach((moveable) => {
+            moveable.position.x +=3
+        })
     }
     else if (keys.s.pressed && lastKey === 's') {
-        background.position.y -= 3
+        moveables.forEach((moveable) => {
+            moveable.position.y -=3
+        })
     }
     else if (keys.d.pressed && lastKey === 'd') {
-        background.position.x -= 3
+        moveables.forEach((moveable) => {
+            moveable.position.x -=3
+        })
     }
 }
 window.requestAnimationFrame(animate);

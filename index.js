@@ -39,7 +39,7 @@ class Boundary {
         this.height = 48
     }
      draw() {
-        c.fillStyle = 'red'
+        c.fillStyle = 'rgba(255, 0, 0, 0)'
         // four arguments for x, y, width, and height
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
      }
@@ -103,7 +103,8 @@ class Sprite {
 const player = new Sprite({
     position: {
         x: canvas.width / 2 - 192 / 4 / 2,
-        y: canvas.height / 2 - 68 / 2
+        // had to adjust height to 88 px lower than sprite size (68px high) due to collision detection
+        y: canvas.height / 2 + 20 / 2
     },
     image: playerImage,
     frames: {
@@ -196,23 +197,91 @@ function animate() {
     //     playerImage.width/4,
     //     playerImage.height
     // ) 
-
+    let moving = true
     if (keys.w.pressed && lastKey === 'w'){
+        // create a clone of boundary and add 3 to y-axis 
+        // stop character from moving up when 'w' is pressed
+        for (let i = 0; i < boundaries.length; i++){
+           const boundary = boundaries[i] 
+           if (collisionDetect({
+            rect1: player,
+            rect2: {...boundary, position: {
+                x: boundary.position.x,
+                y: boundary.position.y +3
+            } }
+            })) {
+                console.log("colliding")
+                moving = false
+                break
+            }
+        }
+        if (moving)
         moveables.forEach((moveable) => {
             moveable.position.y +=3
         })
     }
     else if (keys.a.pressed && lastKey === 'a') {
+        // create a clone of boundary and add 3 to x-axis 
+        // stop character from moving left when 'a' is pressed
+        for (let i = 0; i < boundaries.length; i++){
+            const boundary = boundaries[i] 
+            if (collisionDetect({
+             rect1: player,
+             rect2: {...boundary, position: {
+                 x: boundary.position.x + 3,
+                 y: boundary.position.y
+             } }
+             })) {
+                 console.log("colliding")
+                 moving = false
+                 break
+             }
+         }
+         if (moving)
         moveables.forEach((moveable) => {
             moveable.position.x +=3
         })
     }
     else if (keys.s.pressed && lastKey === 's') {
+        // create a clone of boundary and subtract 3 from y-axis 
+        // stop character from moving down when 's' is pressed
+        for (let i = 0; i < boundaries.length; i++){
+            const boundary = boundaries[i] 
+            if (collisionDetect({
+             rect1: player,
+             rect2: {...boundary, position: {
+                 x: boundary.position.x,
+                 y: boundary.position.y -3
+             } }
+             })) {
+                 console.log("colliding")
+                 moving = false
+                 break
+             }
+         }
+        if (moving)
         moveables.forEach((moveable) => {
             moveable.position.y -=3
         })
     }
     else if (keys.d.pressed && lastKey === 'd') {
+        // create a clone of boundary and subtract 3 from x-axis 
+        // stop character from moving right when 'd' is pressed
+        for (let i = 0; i < boundaries.length; i++){
+            const boundary = boundaries[i] 
+            if (collisionDetect({
+             rect1: player,
+             rect2: {...boundary, position: {
+                 x: boundary.position.x -3,
+                 y: boundary.position.y
+             } }
+             })) {
+                 console.log("colliding")
+                 moving = false
+                 break
+             }
+         }
+         if (moving)
         moveables.forEach((moveable) => {
             moveable.position.x -=3
         })

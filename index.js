@@ -70,15 +70,47 @@ collisionsMap.forEach((row, i) => {
 console.log(boundaries)
 
 class Sprite {
-    constructor({position, image, velocity}) {
+    constructor({ position, image, velocity, frames = {max: 1} }) {
         this.position = position;
         this.image = image;
+        this.frames = frames;
+        this.image.onload = () => {
+            this.width = this.image.width / this.frames.max
+            this.height = this.image.height
+        };
     }
 
     draw() {
-        c.drawImage(this.image, this.position.x, this.position.y)
+        // c.drawImage(this.image, this.position.x, this.position.y)
+        c.drawImage(
+            this.image, 
+            // cropping arguments (x, y, crop width, crop height)
+            0, 
+            0,
+            this.image.width / this.frames.max,
+            this.image.height,
+            // end of cropping arguments
+            this.position.x,
+            this.position.y,
+            // last two arguments are width and height that image should be rendered out as
+            this.image.width / this.frames.max,
+            this.image.height
+        ) 
     }
 }
+
+// place character in exact center of canvas
+const player = new Sprite({
+    position: {
+        x: canvas.width / 2 - 192 / 4 / 2,
+        y: canvas.height / 2 - 68 / 2
+    },
+    image: playerImage,
+    frames: {
+        max: 4
+    }
+})
+
 
 const background = new Sprite({
     // set position to an object with x and y axis
@@ -86,7 +118,7 @@ const background = new Sprite({
     x: offset.x,
     y: offset.y
     },
-    image: image
+    image: image,
 })
 
 // create an object for keys that are not pressed down by default
@@ -105,17 +137,28 @@ const keys = {
     }
 }
 
-// test
-const testBoundary = new Boundary({
-    position: {
-        x: 400,
-        y: 400
-    }
-})
+// // test
+// const testBoundary = new Boundary({
+//     position: {
+//         x: 400,
+//         y: 200
+//     }
+// })
 
 // moveables
-const moveables = [background, testBoundary]
+// need spread operator for array
+const moveables = [background, ...boundaries]
 
+// create function to house collision detection code
+function collisionDetect({ rect1, rect2 }) {
+    return(
+        rect1.position.x + rect1.width >= rect2.position.x && 
+        rect1.position.x <= rect2.position.x + rect2.width &&
+        rect1.position.y <= rect2.position.y + rect2.height &&
+        rect1.position.y + rect1.height >= rect2.position.y
+    )
+
+}
 // animation infinite loop
 function animate() {
 
@@ -124,24 +167,35 @@ function animate() {
     // load map before player so that player is on top of map
     background.draw(image)
     // draw boundaries on top of background, but before player
-    // boundaries.forEach(boundary => {
-    //     boundary.draw()
-    // })
-    c.drawImage(
-        playerImage, 
-        // cropping arguments (x, y, crop width, crop height)
-        0, 
-        0,
-        playerImage.width/4,
-        playerImage.height,
-        // end of cropping arguments
-        // place character in exact center of canvas
-        canvas.width / 2 - playerImage.width / 4 / 2, 
-        canvas.height / 2 - playerImage.height / 2,
-        // last two arguments are width and height that image should be rendered out as
-        playerImage.width/4,
-        playerImage.height
-    ) 
+    boundaries.forEach(boundary => {
+        boundary.draw() 
+        
+        if (collisionDetect({
+            rect1: player,
+            rect2: boundary
+            })) {
+                console.log("colliding")
+            }
+        })
+    // testBoundary.draw()
+    player.draw(image)
+
+    
+    // c.drawImage(
+    //     playerImage, 
+    //     // cropping arguments (x, y, crop width, crop height)
+    //     0, 
+    //     0,
+    //     playerImage.width/4,
+    //     playerImage.height,
+    //     // end of cropping arguments
+    //     // place character in exact center of canvas
+    //     canvas.width / 2 - playerImage.width / 4 / 2, 
+    //     canvas.height / 2 - playerImage.height / 2,
+    //     // last two arguments are width and height that image should be rendered out as
+    //     playerImage.width/4,
+    //     playerImage.height
+    // ) 
 
     if (keys.w.pressed && lastKey === 'w'){
         moveables.forEach((moveable) => {

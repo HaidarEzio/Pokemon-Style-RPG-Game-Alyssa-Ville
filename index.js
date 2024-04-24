@@ -13,17 +13,7 @@ canvas.height = 576;
 c.fillStyle = 'white';
 c.fillRect(0,0, canvas.width, canvas.height);
 
-// import map image
-const image = new Image();
-image.src = '/RPGGameMapAlyssaVille_noSprites.png'
 
-// foreground objects image
-const foregroundImage = new Image();
-foregroundImage.src = '/Foreground Objects.png'
-
-// import player down image
-const playerImage = new Image();
-playerImage.src = "/playerDown.png"
 
 // determine collision points based on map json data from collisions.js
 // use for loop to iterate through and slice into sections of 62 (width of map) each
@@ -58,6 +48,30 @@ collisionsMap.forEach((row, i) => {
 
 console.log(boundaries)
 
+// import map image
+const image = new Image();
+image.src = '/RPGGameMapAlyssaVille_noSprites.png'
+
+// foreground objects image
+const foregroundImage = new Image();
+foregroundImage.src = '/Foreground Objects.png'
+
+// import player down image
+const playerDownImage = new Image();
+playerDownImage.src = "/playerDown.png"
+
+// player up image
+const playerUpImage = new Image();
+playerUpImage.src = '/playerUp.png'
+
+// player right image
+const playerRightImage = new Image();
+playerRightImage.src = '/playerRight.png'
+
+// player left image
+const playerLeftImage = new Image();
+playerLeftImage.src = '/playerLeft.png'
+
 // place character in exact center of canvas
 const player = new Sprite({
     position: {
@@ -65,9 +79,15 @@ const player = new Sprite({
         // had to adjust height to 88 px lower than sprite size (68px high) due to collision detection
         y: canvas.height / 2 + 20 / 2
     },
-    image: playerImage,
+    image: playerDownImage,
     frames: {
         max: 4
+    },
+    sprites: {
+        up: playerUpImage,
+        down: playerDownImage,
+        right: playerRightImage,
+        left: playerLeftImage
     }
 })
 
@@ -151,24 +171,12 @@ function animate() {
     // draw foreground last to allow player to move behind foreground objects
     foreground.draw(image)
 
-    
-    // c.drawImage(
-    //     playerImage, 
-    //     // cropping arguments (x, y, crop width, crop height)
-    //     0, 
-    //     0,
-    //     playerImage.width/4,
-    //     playerImage.height,
-    //     // end of cropping arguments
-    //     // place character in exact center of canvas
-    //     canvas.width / 2 - playerImage.width / 4 / 2, 
-    //     canvas.height / 2 - playerImage.height / 2,
-    //     // last two arguments are width and height that image should be rendered out as
-    //     playerImage.width/4,
-    //     playerImage.height
-    // ) 
+    // code for movement
     let moving = true
+    player.walk = false
     if (keys.w.pressed && lastKey === 'w'){
+        player.walk = true
+        player.image = player.sprites.up
         // create a clone of boundary and add 3 to y-axis 
         // stop character from moving up when 'w' is pressed
         for (let i = 0; i < boundaries.length; i++){
@@ -191,6 +199,8 @@ function animate() {
         })
     }
     else if (keys.a.pressed && lastKey === 'a') {
+        player.walk = true
+        player.image = player.sprites.left
         // create a clone of boundary and add 3 to x-axis 
         // stop character from moving left when 'a' is pressed
         for (let i = 0; i < boundaries.length; i++){
@@ -207,12 +217,14 @@ function animate() {
                  break
              }
          }
-         if (moving)
+        if (moving)
         moveables.forEach((moveable) => {
             moveable.position.x +=3
         })
     }
     else if (keys.s.pressed && lastKey === 's') {
+        player.walk = true
+        player.image = player.sprites.down
         // create a clone of boundary and subtract 3 from y-axis 
         // stop character from moving down when 's' is pressed
         for (let i = 0; i < boundaries.length; i++){
@@ -235,6 +247,8 @@ function animate() {
         })
     }
     else if (keys.d.pressed && lastKey === 'd') {
+        player.walk = true
+        player.image = player.sprites.right
         // create a clone of boundary and subtract 3 from x-axis 
         // stop character from moving right when 'd' is pressed
         for (let i = 0; i < boundaries.length; i++){
@@ -251,7 +265,7 @@ function animate() {
                  break
              }
          }
-         if (moving)
+        if (moving)
         moveables.forEach((moveable) => {
             moveable.position.x -=3
         })

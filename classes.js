@@ -1,13 +1,15 @@
 // sprite creation
 class Sprite {
-    constructor({ position, image, velocity, frames = {max: 1} }) {
+    constructor({ position, image, velocity, frames = {max: 1}, sprites }) {
         this.position = position;
         this.image = image;
-        this.frames = frames;
+        this.frames = {...frames, val: 0, elapsed: 0};
         this.image.onload = () => {
             this.width = this.image.width / this.frames.max
             this.height = this.image.height
-        };
+        }
+        this.walk = false
+        this.sprites = sprites
     }
 
     draw() {
@@ -15,7 +17,8 @@ class Sprite {
         c.drawImage(
             this.image, 
             // cropping arguments (x, y, crop width, crop height)
-            0, 
+            // multiplying val 0-3 by 48px to crop to correct character frame
+            this.frames.val * this.width, 
             0,
             this.image.width / this.frames.max,
             this.image.height,
@@ -26,6 +29,18 @@ class Sprite {
             this.image.width / this.frames.max,
             this.image.height
         ) 
+            // if false will not run animation code
+            if (!this.walk) return
+
+            if(this.frames.max > 1) {
+                this.frames.elapsed++
+            }
+            if(this.frames.elapsed % 10 === 0){
+                if(this.frames.val < this.frames.max - 1) {
+                    this.frames.val++
+                }
+                else this.frames.val = 0
+            }
     }
 }
 

@@ -13,8 +13,6 @@ canvas.height = 576;
 c.fillStyle = 'white';
 c.fillRect(0,0, canvas.width, canvas.height);
 
-
-
 // determine collision points based on map json data from collisions.js
 // use for loop to iterate through and slice into sections of 62 (width of map) each
 // create variable to hold collisions data
@@ -47,6 +45,30 @@ collisionsMap.forEach((row, i) => {
 })
 
 console.log(boundaries)
+
+// battlezones data map
+const battleZonesMap = []
+for (let i =0; i < battleZonesData.length; i += 62){
+    battleZonesMap.push(battleZonesData.slice(i, 62 + i))
+    console.log(battleZonesMap)
+} 
+
+const battleZones = []
+
+battleZonesMap.forEach((row, i) => {
+    row.forEach((symbol, n) => {
+        if(symbol === 1089){
+            battleZones.push(
+                new Boundary({
+                    position: {
+                        x: n * Boundary.width + offset.x,
+                        y: i * Boundary.height + offset.y
+                    }
+                })
+            )
+        }
+    })
+})
 
 // import map image
 const image = new Image();
@@ -136,7 +158,7 @@ const keys = {
 
 // moveables
 // need spread operator for array
-const moveables = [background, ...boundaries, foreground]
+const moveables = [background, ...boundaries, foreground, ...battleZones]
 
 // create function to house collision detection code
 function collisionDetect({ rect1, rect2 }) {
@@ -167,6 +189,12 @@ function animate() {
             }
         })
     // testBoundary.draw()
+
+    // battlezones
+    battleZones.forEach(battleZone => {
+        battleZone.draw()
+    })
+
     player.draw(image)
     // draw foreground last to allow player to move behind foreground objects
     foreground.draw(image)

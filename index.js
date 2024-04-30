@@ -168,8 +168,8 @@ function collisionDetect({ rect1, rect2 }) {
         rect1.position.y <= rect2.position.y + rect2.height &&
         rect1.position.y + rect1.height >= rect2.position.y
     )
-
 }
+
 // animation infinite loop
 function animate() {
 

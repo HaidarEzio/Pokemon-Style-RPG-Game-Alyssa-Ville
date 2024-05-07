@@ -170,6 +170,11 @@ function collisionDetect({ rect1, rect2 }) {
     )
 }
 
+// battle object with intitiated property as false
+const battle = {
+    initiated: false
+}
+
 // animation infinite loop
 function animate() {
 
@@ -199,12 +204,44 @@ function animate() {
     // draw foreground last to allow player to move behind foreground objects
     foreground.draw(image)
 
-    // code for movement
+    //
     let moving = true
     player.walk = false
+
+    // make sure another battle wont activate during original battle
+    if (battle.initiated) return
+
+    // battleZones code
+    if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed){
+        // battlezones collision detecting
+        for (let i = 0; i < battleZones.length; i++){
+            const battleZone = battleZones[i] 
+
+            // equation to determine overlapping area between battleZone and character
+            const overlappingArea = (Math.min(player.position.x + player.width, 
+                battleZone.position.x + battleZone.width) - Math.max(player.position.x, 
+                battleZone.position.x)) * (Math.min(player.position.y + player.height, 
+                battleZone.position.y + battleZone.height) - Math.max(player.position.y, 
+                battleZone.position.y))
+
+            if (collisionDetect({
+             rect1: player,
+             rect2: battleZone
+            }) 
+            && overlappingArea > player.width * player.height / 2 && Math.random() < 0.05
+        ){
+                 console.log("battleZone collision")
+                 battle.initiated = true
+                 break
+             }
+         }
+
+    }
+    // code for movement
     if (keys.w.pressed && lastKey === 'w'){
         player.walk = true
         player.image = player.sprites.up
+
         // create a clone of boundary and add 3 to y-axis 
         // stop character from moving up when 'w' is pressed
         for (let i = 0; i < boundaries.length; i++){

@@ -10,9 +10,15 @@ need to resize to be large enough for entire game -->
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
 </head>
 <body class="bg bg-dark">
-  <canvas id="game-container"></canvas> 
+  <div class="transition">
+    <div id="battle-activate"></div>
+    <canvas id="game-container"></canvas> 
+  </div>
   <!-- make sure js script is after canvas element so that canvas renders first 
   and can return something -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js" 
+  integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ==" 
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="classes.js"></script>
   <script src="battleZones.js"></script>
   <script src="Collisions.js"></script>

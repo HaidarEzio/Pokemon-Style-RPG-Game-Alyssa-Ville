@@ -1,4 +1,4 @@
-// retrieve canvas element
+// retrieve and manipulate canvas element
 const canvas = document.getElementById("game-container");
 const c = canvas.getContext('2d')
 
@@ -8,6 +8,17 @@ canvas.height = 576;
 // draw a rectangle to house game map
 c.fillStyle = 'white';
 c.fillRect(0,0, canvas.width, canvas.height);
+
+// offset object
+const offset = {
+    x: -690,
+    y: -380
+}
+
+// battle object with intitiated property default as false
+const battle = {
+    initiated: false
+}
 
 // *****************************************
 // FUNCTIONS
@@ -57,10 +68,11 @@ function animateBattle() {
 // MAPPING ALL BOUNDARIES
 // *****************************************
 
-// determine collision points based on map json data from collisions.js
-// use for loop to iterate through and slice into sections of 62 (width of map) each
-// create variable to hold collisions data
+// variable to hold collisions data
 const collisionsMap = []
+
+// determine collision points based on map json data from Collisions.js
+// for loop to iterate through and slice into sections of 62 (width of map) each
 for (let i = 0; i < collisions.length; i += 62) {
     collisionsMap.push(collisions.slice(i, 62 + i))
     // console.log(collisionsMap)
@@ -68,12 +80,6 @@ for (let i = 0; i < collisions.length; i += 62) {
 
 // boundaries array
 const boundaries = []
-
-// offset object
-const offset = {
-    x: -690,
-    y: -380
-}
 
 // map out collisions based on json data (Collisions.js)
 collisionsMap.forEach((row, i) => {
@@ -89,10 +95,10 @@ collisionsMap.forEach((row, i) => {
         )}
     })
 })
-
 // console.log(boundaries)
 
-// battlezones data map based on json data (pulling from battleZones.js)
+// determine battlezones based on map json data from battleZones.js
+// for loop to iterate through and slice into sections of 62 (width of map) each
 const battleZonesMap = []
 for (let i =0; i < battleZonesData.length; i += 62){
     battleZonesMap.push(battleZonesData.slice(i, 62 + i))
@@ -100,7 +106,7 @@ for (let i =0; i < battleZonesData.length; i += 62){
 } 
 
 const battleZones = []
-
+// map out battlezones based on json data (pulling from battleZones.js)
 battleZonesMap.forEach((row, i) => {
     row.forEach((symbol, n) => {
         if(symbol === 1089){
@@ -224,11 +230,58 @@ const keys = {
 // need spread operator for any arrays
 const moveables = [background, ...boundaries, foreground, ...battleZones]
 
+// listen for when player presses key and execute function
+let lastKey = '';
+window.addEventListener('keydown', (e) => {
+    // console.log("keydown works", e.key)
+    switch (e.key) {
+        case 'w':
+            keys.w.pressed = true
+            lastKey = 'w'
+            console.log("pressed w key")
+            break
+        case 'a':
+            keys.a.pressed = true
+            lastKey = 'a'
+            console.log("pressed a key")
+            break
+        case 's':
+            keys.s.pressed = true
+            lastKey = 's'
+            console.log("pressed s key")
+            break
+        case 'd':
+            keys.d.pressed = true
+            lastKey = 'd'
+            console.log("pressed d key")
+            break
+    }
+    console.log(keys)
+})
 
-// battle object with intitiated property default as false
-const battle = {
-    initiated: false
-}
+// create event listener for releasing keys
+window.addEventListener('keyup', (e) => {
+    // console.log("keydown works", e.key)
+    switch (e.key) {
+        case 'w':
+            keys.w.pressed = false
+            break
+        case 'a':
+            keys.a.pressed = false
+            break
+        case 's':
+            keys.s.pressed = false
+            break
+        case 'd':
+            keys.d.pressed = false
+            break
+    }
+    console.log(keys)
+})
+
+// *****************************************
+// ANIMATION FUNCTION
+// *****************************************
 
 // animation infinite loop
 function animate() {
@@ -248,7 +301,6 @@ function animate() {
                 console.log("colliding")
             }
         })
-    // testBoundary.draw()
 
     // battlezones
     battleZones.forEach(battleZone => {
@@ -297,7 +349,8 @@ function animate() {
          }
 
     }
-    // code for movement
+
+    // code for movement animation
     if (keys.w.pressed && lastKey === 'w'){
         player.walk = true
         player.image = player.sprites.up
@@ -396,56 +449,5 @@ function animate() {
         })
     }
 }
+
 window.requestAnimationFrame(animate);
-
-
-// listen for when player presses key and execute function
-let lastKey = '';
-window.addEventListener('keydown', (e) => {
-    // console.log("keydown works", e.key)
-    switch (e.key) {
-        case 'w':
-            keys.w.pressed = true
-            lastKey = 'w'
-            console.log("pressed w key")
-            break
-        case 'a':
-            keys.a.pressed = true
-            lastKey = 'a'
-            console.log("pressed a key")
-            break
-        case 's':
-            keys.s.pressed = true
-            lastKey = 's'
-            console.log("pressed s key")
-            break
-        case 'd':
-            keys.d.pressed = true
-            lastKey = 'd'
-            console.log("pressed d key")
-            break
-    }
-    console.log(keys)
-})
-
-// create event listener for releasing keys
-window.addEventListener('keyup', (e) => {
-    // console.log("keydown works", e.key)
-    switch (e.key) {
-        case 'w':
-            keys.w.pressed = false
-            break
-        case 'a':
-            keys.a.pressed = false
-            break
-        case 's':
-            keys.s.pressed = false
-            break
-        case 'd':
-            keys.d.pressed = false
-            break
-    }
-    console.log(keys)
-})
-
-

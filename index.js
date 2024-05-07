@@ -5,9 +5,20 @@
 const canvas = document.getElementById("game-container");
 // giant object resposible for drawing out everything in the game
 const c = canvas.getContext('2d')
+
 canvas.width = 1024;
 canvas.height = 576;
 // console.log(c);
+
+// function for gsap battle activation transition animation
+function activateBattle () {
+    gsap.to('#battle-activate', {
+        opacity: 1,
+        repeat: 3,
+        duration: 0.4,
+        yoyo: true
+    })
+}
 
 // draw a rectangle to house game map
 c.fillStyle = 'white';
@@ -232,6 +243,7 @@ function animate() {
         ){
                  console.log("battleZone collision")
                  battle.initiated = true
+                 activateBattle()
                  break
              }
          }

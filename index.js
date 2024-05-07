@@ -1,14 +1,27 @@
-// // testing
-// console.log("This is my game");
-
-// resize canvas to be larger
+// retrieve canvas element
 const canvas = document.getElementById("game-container");
-// giant object resposible for drawing out everything in the game
 const c = canvas.getContext('2d')
 
 canvas.width = 1024;
 canvas.height = 576;
-// console.log(c);
+
+// draw a rectangle to house game map
+c.fillStyle = 'white';
+c.fillRect(0,0, canvas.width, canvas.height);
+
+// *****************************************
+// FUNCTIONS
+// *****************************************
+
+// function to house collision detection code for all boundaries
+function collisionDetect({ rect1, rect2 }) {
+    return(
+        rect1.position.x + rect1.width >= rect2.position.x && 
+        rect1.position.x <= rect2.position.x + rect2.width &&
+        rect1.position.y <= rect2.position.y + rect2.height &&
+        rect1.position.y + rect1.height >= rect2.position.y
+    )
+}
 
 // function for gsap battle activation transition animation
 function activateBattle () {
@@ -35,13 +48,14 @@ function activateBattle () {
 
 // function for animation of battle sequence
 function animateBattle() {
-    window.requestAnimationFrame(animateBattle)
     battleBackground.draw()
+    window.requestAnimationFrame(animateBattle);
     console.log("battle in progress")
 }
-// draw a rectangle to house game map
-c.fillStyle = 'white';
-c.fillRect(0,0, canvas.width, canvas.height);
+
+// *****************************************
+// MAPPING ALL BOUNDARIES
+// *****************************************
 
 // determine collision points based on map json data from collisions.js
 // use for loop to iterate through and slice into sections of 62 (width of map) each
@@ -49,17 +63,19 @@ c.fillRect(0,0, canvas.width, canvas.height);
 const collisionsMap = []
 for (let i = 0; i < collisions.length; i += 62) {
     collisionsMap.push(collisions.slice(i, 62 + i))
-    console.log(collisionsMap)
+    // console.log(collisionsMap)
 }
 
-// declare boundaries array
+// boundaries array
 const boundaries = []
-// give offset a variable since used multiple times
+
+// offset object
 const offset = {
     x: -690,
     y: -380
 }
 
+// map out collisions based on json data (Collisions.js)
 collisionsMap.forEach((row, i) => {
     row.forEach((symbol, n) => {
         if (symbol === 1089){
@@ -74,13 +90,13 @@ collisionsMap.forEach((row, i) => {
     })
 })
 
-console.log(boundaries)
+// console.log(boundaries)
 
-// battlezones data map
+// battlezones data map based on json data (pulling from battleZones.js)
 const battleZonesMap = []
 for (let i =0; i < battleZonesData.length; i += 62){
     battleZonesMap.push(battleZonesData.slice(i, 62 + i))
-    console.log(battleZonesMap)
+    // console.log(battleZonesMap)
 } 
 
 const battleZones = []
@@ -99,6 +115,10 @@ battleZonesMap.forEach((row, i) => {
         }
     })
 })
+
+// *****************************************
+// IMPORTING ALL IMAGES
+// *****************************************
 
 // import map image
 const image = new Image();
@@ -128,6 +148,10 @@ playerLeftImage.src = './img/playerLeft.png'
 const battleBackgroundImage = new Image()
 battleBackgroundImage.src = './img/battleBackground.png'
 
+// *****************************************
+// CREATING ALL SPRITES TO BE DRAWN FROM IMAGES
+// *****************************************
+
 // place character in exact center of canvas
 const player = new Sprite({
     position: {
@@ -147,7 +171,7 @@ const player = new Sprite({
     }
 })
 
-
+// background (main map)
 const background = new Sprite({
     // set position to an object with x and y axis
     position: {
@@ -157,6 +181,7 @@ const background = new Sprite({
     image: image,
 })
 
+// foreground objects (character can move behind)
 const foreground = new Sprite({
     // set position to an object with x and y axis
     position: {
@@ -166,6 +191,7 @@ const foreground = new Sprite({
     image: foregroundImage,
 })
 
+// main battle sequence
 const battleBackground = new Sprite({
     position: {
         x: 0,
@@ -174,7 +200,11 @@ const battleBackground = new Sprite({
     image: battleBackgroundImage
 })
 
-// create an object for keys that are not pressed down by default
+// *****************************************
+// CONTROLS
+// *****************************************
+
+// object for keys that are not pressed down by default
 const keys = {
     w: {
         pressed: false
@@ -190,29 +220,12 @@ const keys = {
     }
 }
 
-// // test
-// const testBoundary = new Boundary({
-//     position: {
-//         x: 400,
-//         y: 200
-//     }
-// })
-
 // moveables
-// need spread operator for array
+// need spread operator for any arrays
 const moveables = [background, ...boundaries, foreground, ...battleZones]
 
-// create function to house collision detection code
-function collisionDetect({ rect1, rect2 }) {
-    return(
-        rect1.position.x + rect1.width >= rect2.position.x && 
-        rect1.position.x <= rect2.position.x + rect2.width &&
-        rect1.position.y <= rect2.position.y + rect2.height &&
-        rect1.position.y + rect1.height >= rect2.position.y
-    )
-}
 
-// battle object with intitiated property as false
+// battle object with intitiated property default as false
 const battle = {
     initiated: false
 }
@@ -278,8 +291,6 @@ function animate() {
                  activateBattle()
                 //  deactivate current animation loop (no longer calling animate)
                     window.cancelAnimationFrame(frameId)
-                //  activate new animation loop
-                 animateBattle()
 
                  break
              }

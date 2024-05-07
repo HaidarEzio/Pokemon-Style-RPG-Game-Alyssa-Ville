@@ -16,10 +16,29 @@ function activateBattle () {
         opacity: 1,
         repeat: 3,
         duration: 0.4,
-        yoyo: true
+        yoyo: true,
+        onComplete() {
+            gsap.to('#battle-activate', {
+                opacity: 1,
+                duration: 0.4,
+                onComplete() {
+                    animateBattle()
+                    gsap.to('#battle-activate', {
+                        opacity: 0,
+                        duration: 0.4
+                    })
+                }
+            })
+        }
     })
 }
 
+// function for animation of battle sequence
+function animateBattle() {
+    window.requestAnimationFrame(animateBattle)
+    battleBackground.draw()
+    console.log("battle in progress")
+}
 // draw a rectangle to house game map
 c.fillStyle = 'white';
 c.fillRect(0,0, canvas.width, canvas.height);
@@ -83,27 +102,31 @@ battleZonesMap.forEach((row, i) => {
 
 // import map image
 const image = new Image();
-image.src = '/RPGGameMapAlyssaVille_noSprites.png'
+image.src = './img/RPGGameMapAlyssaVille_noSprites.png'
 
 // foreground objects image
 const foregroundImage = new Image();
-foregroundImage.src = '/Foreground Objects.png'
+foregroundImage.src = './img/Foreground Objects.png'
 
 // import player down image
 const playerDownImage = new Image();
-playerDownImage.src = "/playerDown.png"
+playerDownImage.src = "./img/playerDown.png"
 
 // player up image
 const playerUpImage = new Image();
-playerUpImage.src = '/playerUp.png'
+playerUpImage.src = './img/playerUp.png'
 
 // player right image
 const playerRightImage = new Image();
-playerRightImage.src = '/playerRight.png'
+playerRightImage.src = './img/playerRight.png'
 
 // player left image
 const playerLeftImage = new Image();
-playerLeftImage.src = '/playerLeft.png'
+playerLeftImage.src = './img/playerLeft.png'
+
+// battle background image
+const battleBackgroundImage = new Image()
+battleBackgroundImage.src = './img/battleBackground.png'
 
 // place character in exact center of canvas
 const player = new Sprite({
@@ -141,6 +164,14 @@ const foreground = new Sprite({
     y: offset.y
     },
     image: foregroundImage,
+})
+
+const battleBackground = new Sprite({
+    position: {
+        x: 0,
+        y: 0
+    },
+    image: battleBackgroundImage
 })
 
 // create an object for keys that are not pressed down by default
@@ -189,7 +220,7 @@ const battle = {
 // animation infinite loop
 function animate() {
 
-    window.requestAnimationFrame(animate)
+    const frameId = window.requestAnimationFrame(animate)
     
     // load map before player so that player is on top of map
     background.draw(image)
@@ -243,7 +274,13 @@ function animate() {
         ){
                  console.log("battleZone collision")
                  battle.initiated = true
+                //  call gsap animation function for transition
                  activateBattle()
+                //  deactivate current animation loop (no longer calling animate)
+                    window.cancelAnimationFrame(frameId)
+                //  activate new animation loop
+                 animateBattle()
+
                  break
              }
          }

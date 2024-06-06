@@ -61,6 +61,7 @@ function activateBattle () {
 function animateBattle() {
     battleBackground.draw()
     draggle.draw()
+    emby.draw()
     window.requestAnimationFrame(animateBattle);
     console.log("battle in progress")
 }
@@ -233,7 +234,7 @@ const draggle = new Sprite({
 // create emby sprite
 const emby = new Sprite({
     position: {
-        x: 250,
+        x: 300,
         y: 325
     },
     image: embyImage,

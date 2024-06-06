@@ -159,6 +159,10 @@ battleBackgroundImage.src = './img/battleBackground.png'
 const draggleImage = new Image()
 draggleImage.src = './img/draggleImage.png'
 
+// emby image
+const embyImage = new Image()
+embyImage.src = './img/embyImage.png'
+
 // *****************************************
 // CREATING ALL SPRITES TO BE DRAWN FROM IMAGES
 // *****************************************
@@ -212,13 +216,27 @@ const battleBackground = new Sprite({
     image: battleBackgroundImage
 })
 
-// create enemy sprite
+// create draggle sprite
 const draggle = new Sprite({
     position: {
         x: 800,
         y: 100
     },
     image: draggleImage,
+    frames: {
+        max: 4,
+        hold: 30
+    },
+    walk: true
+})
+
+// create emby sprite
+const emby = new Sprite({
+    position: {
+        x: 250,
+        y: 325
+    },
+    image: embyImage,
     frames: {
         max: 4,
         hold: 30

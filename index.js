@@ -154,6 +154,10 @@ playerLeftImage.src = './img/playerLeft.png'
 const battleBackgroundImage = new Image()
 battleBackgroundImage.src = './img/battleBackground.png'
 
+// draggle image
+const draggleImage = new Image()
+draggleImage.src = './img/draggleImage.png'
+
 // *****************************************
 // CREATING ALL SPRITES TO BE DRAWN FROM IMAGES
 // *****************************************
@@ -204,6 +208,15 @@ const battleBackground = new Sprite({
         y: 0
     },
     image: battleBackgroundImage
+})
+
+// create enemy sprite
+const draggle = new Sprite({
+    position: {
+        x: 280,
+        y: 325
+    },
+    image: draggleImage
 })
 
 // *****************************************

@@ -60,6 +60,7 @@ function activateBattle () {
 // function for animation of battle sequence
 function animateBattle() {
     battleBackground.draw()
+    draggle.draw()
     window.requestAnimationFrame(animateBattle);
     console.log("battle in progress")
 }
@@ -171,7 +172,8 @@ const player = new Sprite({
     },
     image: playerDownImage,
     frames: {
-        max: 4
+        max: 4,
+        hold: 10
     },
     sprites: {
         up: playerUpImage,
@@ -213,10 +215,15 @@ const battleBackground = new Sprite({
 // create enemy sprite
 const draggle = new Sprite({
     position: {
-        x: 280,
-        y: 325
+        x: 800,
+        y: 100
     },
-    image: draggleImage
+    image: draggleImage,
+    frames: {
+        max: 4,
+        hold: 30
+    },
+    walk: true
 })
 
 // *****************************************

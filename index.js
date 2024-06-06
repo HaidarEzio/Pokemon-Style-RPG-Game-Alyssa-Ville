@@ -62,6 +62,10 @@ function animateBattle() {
     battleBackground.draw()
     draggle.draw()
     emby.draw()
+    gsap.to('#interface', {
+        opacity: 1,
+        duration:0.4
+    })
     window.requestAnimationFrame(animateBattle);
     console.log("battle in progress")
 }

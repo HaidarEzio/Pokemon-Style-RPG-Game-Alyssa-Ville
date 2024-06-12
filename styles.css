@@ -19,6 +19,8 @@ canvas{
 }
 
 #interface{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     background-color: white;
     border-top: 4px;
     border-top-color: black;
@@ -30,8 +32,33 @@ canvas{
     right: 0;
     left: 0;
     margin: 8px;
+    width: 1024px;
 }
 
 #attacks{
-    width: 700px;
+    width: 683px;
+    height: 145px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+#attack_types{
+    border-left: 4px black solid;
+    text-align: center;
+    font-size: 16px;
+    width: 341px;
+    height: 148px;
+}
+
+button{
+    cursor: pointer;
+    border: 0;
+}
+button:hover{
+    background-color: #bdbdbd;
+
+}
+
+*{
+    font-family: 'Press Start 2P', cursive;
 }

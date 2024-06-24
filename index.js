@@ -128,6 +128,32 @@ battleZonesMap.forEach((row, i) => {
     })
 })
 
+
+const mapBordersMap = []
+for (let i = 0; i < mapBordersData.length; i += 62){
+    mapBordersMap.push(mapBordersData.slice(i, 62 + i))
+    console.log(mapBordersMap)
+}
+
+// map borders array need to add symbol number based on data when imported
+const mapBorders = []
+// map out map borders based on json data from mapBorders.js
+mapBordersMap.forEach((row, i) => {
+    row.forEach((symbol, n) => {
+        if(symbol === ){
+            mapBorders.push(
+                new Boundary({
+                    position: {
+                        x: n * Boundary.width + offset.x,
+                        y: i * Boundary.height + offset.y
+                    }
+                })
+            )
+        }
+    })
+})
+
+
 // *****************************************
 // IMPORTING ALL IMAGES
 // *****************************************
@@ -196,18 +222,27 @@ const player = new Sprite({
 const background = new Sprite({
     // set position to an object with x and y axis
     position: {
-    x: offset.x,
-    y: offset.y
+        x: offset.x,
+        y: offset.y
     },
     image: image,
+})
+
+// second background (second map area)
+const forestBackground = new Sprite({
+    position:{
+        x: offset.x,
+        y: offset.y
+    }, 
+    image: forestMap,
 })
 
 // foreground objects (character can move behind)
 const foreground = new Sprite({
     // set position to an object with x and y axis
     position: {
-    x: offset.x,
-    y: offset.y
+        x: offset.x,
+        y: offset.y
     },
     image: foregroundImage,
 })
@@ -271,7 +306,7 @@ const keys = {
 
 // moveables
 // need spread operator for any arrays
-const moveables = [background, ...boundaries, foreground, ...battleZones]
+const moveables = [background, ...boundaries, foreground, ...battleZones, forestBackground]
 
 // listen for when player presses key and execute function
 let lastKey = '';
@@ -350,6 +385,11 @@ function animate() {
         battleZone.draw()
     })
 
+    // map borders for transitioning
+    mapBorders.forEach(mapBorder => {
+        mapBorder.draw()
+    })
+
     player.draw(image)
     // draw foreground last to allow player to move behind foreground objects
     foreground.draw(image)
@@ -391,6 +431,36 @@ function animate() {
              }
          }
 
+    }
+
+    // code for map change 
+    if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed){
+        // map border collisions detection
+        for (let i = 0; i < mapBorders.length; i++){
+            const mapBorder = mapBorders[i]
+
+            // equation to determine overlapping area between map border and character
+            const overlappingArea = (Math.min(player.position.x + player.width, 
+                mapBorder.position.x + mapBorder.width) - Math.max(player.position.x, 
+                mapBorder.position.x)) * (Math.min(player.position.y + player.height, 
+                mapBorder.position.y + mapBorder.height) - Math.max(player.position.y, 
+                mapBorder.position.y))
+
+            if (collisionDetect({
+                rect1: player,
+                rect2: mapBorder
+            })
+            && overlappingArea > player.width * player.height / 2
+        ){
+            console.log("map border reached, moving to new area...")
+            mapChange.initiated = true
+            // call gsap animation function for new map 
+            activateNewArea()
+            window.cancelAnimationFrame(frameId)
+
+            break
+        }
+        }
     }
 
     // code for movement animation

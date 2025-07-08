@@ -160,7 +160,7 @@ mapBordersMap.forEach((row, i) => {
 
 // import map image
 const image = new Image();
-image.src = './img/RPGGameMapAlyssaVille_noSprites.png'
+image.src = 'img/RPGGameMapAlyssaVille_noSprites.png'
 
 // foreground objects image
 const foregroundImage = new Image();

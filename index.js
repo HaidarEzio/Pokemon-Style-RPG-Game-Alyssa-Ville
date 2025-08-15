@@ -130,8 +130,8 @@ battleZonesMap.forEach((row, i) => {
 
 
 const mapBordersMap = []
-for (let i = 0; i < mapBordersData.length; i += 62){
-    mapBordersMap.push(mapBordersData.slice(i, 62 + i))
+for (let i = 0; i < mapBordersMap.length; i += 62){
+    mapBordersMap.push(mapBordersMap.slice(i, 62 + i))
     console.log(mapBordersMap)
 }
 
@@ -140,7 +140,7 @@ const mapBorders = []
 // map out map borders based on json data from mapBorders.js
 mapBordersMap.forEach((row, i) => {
     row.forEach((symbol, n) => {
-        if(symbol === ){
+        if(symbol === 1089) {
             mapBorders.push(
                 new Boundary({
                     position: {

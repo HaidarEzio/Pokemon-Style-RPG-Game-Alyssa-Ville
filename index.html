@@ -32,15 +32,19 @@ need to resize to be large enough for entire game -->
   </div>
   <!-- make sure js script is after canvas element so that canvas renders first 
   and can return something -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js" 
-  integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ==" 
-  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="classes.js"></script>
-  <script src="battleZones.js"></script>
-  <script src="Collisions.js"></script>
-  <script src="index.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+  <!-- vendor libs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<!-- your data/defs BEFORE index.js (if they define forestMap) -->
+<script src="Collisions.js"></script>
+<script src="battleZones.js"></script>
+<script src="classes.js"></script>
+
+<!-- bootstrap the game last -->
+<script src="index.js"></script>
+
 </body>
 
 <footer class="text-secondary"> Alyssa Favorito 2024 ©</footer>

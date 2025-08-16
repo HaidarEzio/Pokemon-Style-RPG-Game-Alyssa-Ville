@@ -102,10 +102,12 @@ battleZonesMap.forEach((row, i) => {
   });
 });
 
-// FIX: use mapBordersMap (NOT mapBordersMap!) to build the grid
+// FIX: use mapBordersData (NOT mapBordersMap!) to build the grid
+
+const mapBordersData = [];
 const mapBordersMap = [];
-for (let i = 0; i < (Array.isArray(mapBordersMap) ? mapBordersMap.length : 0); i += MAP_WIDTH) {
-  mapBordersMap.push(mapBordersMap.slice(i, i + MAP_WIDTH));
+for (let i = 0; i < (Array.isArray(mapBordersData) ? mapBordersData.length : 0); i += MAP_WIDTH) {
+  mapBordersMap.push(mapBordersData.slice(i, i + MAP_WIDTH));
 }
 
 const mapBorders = [];
